@@ -15,10 +15,6 @@
     </head>
     <body>
         <%
-            List<String> Consumos = (ArrayList<String>) session.getAttribute("vConsumos");
-            List<String> Qtdes = (ArrayList<String>) session.getAttribute("vQtdes");
-            List<String> Precos = (ArrayList<String>) session.getAttribute("vPrecos");
-
             String consumo = request.getParameter("consumo");
             String qtde = request.getParameter("qtde");
             String preco = request.getParameter("preco");
@@ -27,23 +23,29 @@
             session.setAttribute("qtde", qtde);
             session.setAttribute("preco", preco);
 
-            if (Consumos.contains(session.getAttribute("consumo")) == false) {
 
-                if (session.getAttribute("consumo") != null) {
-                    Consumos.add(session.getAttribute("consumo").toString());
-                }
-
-                if (session.getAttribute("qtde") != null) {
-                    Qtdes.add(session.getAttribute("qtde").toString());
-                }
-                if (session.getAttribute("preco") != null) {
-                    Precos.add(session.getAttribute("preco").toString());
-                }
-            }    
-            session.setAttribute("vConsumos", Consumos);
-            session.setAttribute("vQtdes", Qtdes);
-            session.setAttribute("vPrecos", Precos);
+            String consumo1 = session.getAttribute("consumo").toString();
+            String qtde1 = session.getAttribute("qtde").toString();
+            String preco1 = session.getAttribute("preco").toString();
+            ArrayList Consumos = (ArrayList) session.getAttribute("Consumos");
+            ArrayList Qtdes = (ArrayList) session.getAttribute("Qtdes");
+            ArrayList Precos = (ArrayList) session.getAttribute("Precos");
+            if (Consumos == null) {
+                Consumos = new ArrayList();
+            }
+            if (Qtdes == null) {
+                Qtdes = new ArrayList();
+            }
+            if (Precos == null) {
+                Precos = new ArrayList();
+            }
+            Consumos.add(consumo1);
+            Qtdes.add(qtde1);
+            Precos.add(preco1);
+            session.setAttribute("Consumos", Consumos);
+            session.setAttribute("Qtdes", Qtdes);
+            session.setAttribute("Precos", Precos);
+            response.sendRedirect("page1.jsp");
         %>
-        <jsp:forward page="page1.jsp"></jsp:forward>
     </body>
 </html>

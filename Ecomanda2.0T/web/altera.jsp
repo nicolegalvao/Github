@@ -11,6 +11,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="shortcut icon" type="image/x-icon" href="Imagem/icone.ico">
         <script>
             function verifica( form )
             {
@@ -94,24 +95,51 @@
     </head>
     <body>
         <%
-            List<String> Consumos = (ArrayList<String>) session.getAttribute("vConsumos");
-            List<String> Qtdes = (ArrayList<String>) session.getAttribute("vQtdes");
-            List<String> Precos = (ArrayList<String>) session.getAttribute("vPrecos");
+            List<String> Consumos = (ArrayList<String>) session.getAttribute("Consumos");
+            List<String> Qtdes = (ArrayList<String>) session.getAttribute("Qtdes");
+            List<String> Precos = (ArrayList<String>) session.getAttribute("Precos");
             session.setAttribute("id", request.getParameter("indice"));
         %>
-        <H1 align=Center>EcoComanda</H1>
-        <hr>
-        <table cellpadding="30" cellspacing="0" align="center">
-
-            <tr>
-            <form action="alterando.jsp" onsubmit="return verifica(this);">
-                <td>Item:  <%=String.valueOf(Consumos.get(Integer.parseInt(request.getParameter("indice"))))%> <br/></td>
-                <td>Qtde?<input type="text" name="qtde" value="<%=String.valueOf(Qtdes.get(Integer.parseInt(request.getParameter("indice"))))%>" onKeyUp="somente_numero(this)"/><br/></td>
-                <td>Preço?<input type="text" name="preco" value="<%=String.valueOf(Precos.get(Integer.parseInt(request.getParameter("indice"))))%>" onKeyPress="return(MascaraMoeda(this,'','.',event))"/><br/></td>
-                <td><input type="submit" value="Alterar"></td>
-            </form>
-        </tr>
-    </table>
-    <hr>
+        <table border="0" width="100%">
+            <tr align="center"> 
+                <td colspan="3" height="100">
+                    <hr>
+                    <H1 align=Center><font face="arial" color="green"><img src="Imagem/logo.jpg">EcoComanda</font></H1>
+                    <hr>
+                </td> 
+            </tr>
+            <tr align="center"> 
+                <td width="30%">
+                    
+                </td>
+                <td width="40%">
+                    <table align="center"  style="border:1px solid green;">
+                        <tr align="center">
+                            <td>
+                                <table cellpadding="30" cellspacing="0" align="center">
+                                    <tr>
+                                        <form action="alterando.jsp" onsubmit="return verifica(this);">
+                                        <td>Item:  <%=String.valueOf(Consumos.get(Integer.parseInt(request.getParameter("indice"))))%> <br/></td>
+                                        <td>Qtde?<input type="text" name="qtde" value="<%=String.valueOf(Qtdes.get(Integer.parseInt(request.getParameter("indice"))))%>" onKeyUp="somente_numero(this)"/><br/></td>
+                                        <td>Preço?<input type="text" name="preco" value="<%=String.valueOf(Precos.get(Integer.parseInt(request.getParameter("indice"))))%>" onKeyPress="return(MascaraMoeda(this,'','.',event))"/><br/></td>
+                                        <td><input type="submit" value="Alterar"></td>
+                                        </form>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                        
+                </td>
+                <td width="30%"> 
+                    
+                </td> 
+            </tr>
+            <tr align="right"> 
+                <td colspan="3" height="100">
+                    
+                </td>
+            </tr>      
+        </table>
 </body>
 </html>

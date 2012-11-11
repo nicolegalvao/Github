@@ -4,6 +4,7 @@
     Author     : Willian Joddy Kaneko
 --%>
 
+<%@page import="javax.xml.bind.ParseConversionEvent"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.text.DecimalFormat" %>
 <%@page import="java.util.*" %>
@@ -11,25 +12,26 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="shortcut icon" type="image/x-icon" href="Imagem/icone.ico">
         <script>
             function verifica( form )
             {
                 if (form.consumo.value == "")
                 {
-                    alert ("Descrição inválida.");
+                    alert ("Item inválido.");
                     form.consumo.focus();
                     return false;
                 }
 
                 if (form.qtde.value == "" || form.qtde.value == 0)
                 {
-                    alert ("Qtde inválida");
+                    alert ("Qtde inválida.");
                     form.qtde.focus();
                     return false;
                 }
                 if (form.preco.value == "" || form.preco.value <= 0)
                 {
-                    alert ("Preço inválido");
+                    alert ("Preço inválido.");
                     form.preco.focus();
                     return false;
                 }
@@ -102,93 +104,120 @@
                 return false;
             }
         </script>
+        <script type="text/javascript">
+            function abrir(){
+            window.open("myaccount.jsp","Janela","status=no,width=330,height=480,left=920,top=130,location=no,menubar=no,toolbar=no,resizable=yes,scrollbars=no,titlebar=no" )
+            setTimeout("fechar()", 30)
+            }
+        </script>
+           
         <title>EcoComanda</title>
     </head>
     <body>
 
-        <%! List<String> Consumos = new ArrayList<String>();
-            List<String> Qtdes = new ArrayList<String>();
-            List<String> Precos = new ArrayList<String>();
-            int atual = 0;
-            String consumo, qtde, preco;
-        %>
+        <%  
+            ArrayList<String> Consumos = (ArrayList<String>)session.getAttribute("Consumos");
+            ArrayList<String> Qtdes = (ArrayList<String>)session.getAttribute("Qtdes");
+            ArrayList<String> Precos = (ArrayList<String>)session.getAttribute("Precos");
 
-        <%
-            session.setAttribute("vConsumos", Consumos);
-            session.setAttribute("vQtdes", Qtdes);
-            session.setAttribute("vPrecos", Precos);
-            Consumos = (ArrayList<String>) session.getAttribute("vConsumos");
-            Qtdes = (ArrayList<String>) session.getAttribute("vQtdes");
-            Precos = (ArrayList<String>) session.getAttribute("vPrecos");
+            session.setAttribute("Consumos", Consumos);
+            session.setAttribute("Qtdes", Qtdes);
+            session.setAttribute("Precos", Precos);
+            Consumos = (ArrayList<String>) session.getAttribute("Consumos");
+            Qtdes = (ArrayList<String>) session.getAttribute("Qtdes");
+            Precos = (ArrayList<String>) session.getAttribute("Precos");
         %>
-
-        <H1 align=Center>EcoComanda</H1>
-        <hr>
-        <table cellpadding="30" cellspacing="0" align="center">
+        
+        <table border="0" width="100%">
+            <tr align="center"> 
+                <td height="100">
+                    <hr>
+                    <H1 align=Center><font face="arial" color="green"><img src="Imagem/logo.jpg">EcoComanda</font></H1> 
+                    <hr>
+                    <h5 align="right"> <font face="calibri">Bem-vindo!</font> |
+                        <a href="#" onclick="abrir()"><font face="calibri">MyEcomanda</font></a> | 
+                        <a href="logout.jsp"><font face="calibri">Logout</font></a></h5>
+                </td> 
+            </tr>
+            <tr align="center"> 
+                <td>
+                    <table style="border:1px solid green;" width="70%" >
+                        <tr>
+                            <form action="valida2.jsp" onsubmit="return verifica(this);">
+                                <td width="25%">
+                                    Item?<input type="text" name="consumo" size="15" maxlength="100" autofocus required/><br/>
+                                </td>
+                                <td width="25%">
+                                    Qtde?<input type="text" name="qtde" size="3" maxlength="6" onKeyUp="somente_numero(this)" required/><br/>
+                                </td>
+                                <td width="25%">
+                                    Preço?<input type="text" name="preco" size="3" maxlength="6" onKeyUp="somente_numero2(this)" onKeyPress="return(MascaraMoeda(this,'','.',event))" required/><br/>
+                                </td>
+                                <td width="25%">
+                                    <input type="submit" value="Adicionar"/>
+                                </td>
+                            </form>
+                        </tr>
+                    </table>     
+                </td>
+            </tr>
+            <tr align="center">
+                <td>
+                    <table style="border:0px solid green;" width="70%">
+                        <tr>
+                            <td id="consumo">Consumo:</td>
+                            <td id="qtde">Qtde</td>
+                            <td id="preco">Preço:</td>
+                            <td id="total">Total:</td>
+                        </tr>
+                        <%
+                        DecimalFormat formato = new DecimalFormat("##.##");
+                        double aux =0;
+                        if(Consumos!=null){
+                        for(int i=0; i<Consumos.size(); i++){%>
+                            <tr>
+                                <td headers="consumo"><li><%=Consumos.get(i)%></li></td>
+                                <td headers="qtde"><%=Qtdes.get(i).toString()%></td>
+                                <td headers="preco"><%=Precos.get(i).toString()%></td>
+                                <td headers="total"><%Double total = (Double.parseDouble(Qtdes.get(i)) * Double.parseDouble(Precos.get(i)));%><%=formato.format(total)%></td>
+                                <td><a href="altera.jsp?indice=<%=i%>"+">Alterar</a><br/></td>
+                                <td><a href="excluir.jsp?indice=<%=i%>"+">Excluir</a><br/></td>
+                                <%
+                                    session.setAttribute("Consumos", Consumos);
+                                    session.setAttribute("Qtdes", Qtdes);
+                                    session.setAttribute("Precos", Precos);           
+                                    aux = aux + total;
+                        }
+                                %>
+                            </tr>
+                            <%                          
+                                session.setAttribute("Consumos", Consumos);
+                                session.setAttribute("Qtdes", Qtdes);
+                                session.setAttribute("Precos", Precos);           
+                            %>
+                    </table>
+                </td>
+            </tr>
             <tr>
-            <form action="valida2.jsp" onsubmit="return verifica(this);">
-                <td>Item?<input type="text" name="consumo" size="30" maxlength="100" required/><br/></td>
-                <td>Qtde?<input type="text" name="qtde" size="3" maxlength="6" onKeyUp="somente_numero(this)" required/><br/></td>
-                <td>Preço?<input type="text" name="preco" size="3" maxlength="6" onKeyUp="somente_numero2(this)" onKeyPress="return(MascaraMoeda(this,'','.',event))" required/><br/></td>
-                <td><input type="submit" value="Adicionar"/></td>
-            </form>
-        </tr>
-        <tr>
-            <td>Consumo:</td>
-            <td>Qtde:</td>
-            <td>Preço:</td>
-            <td>Total:</td>
-        </tr>
-        <tr>
-            <%
-                //Teste
-                int i = 0;
-                double aux = 0;
-                DecimalFormat formato = new DecimalFormat("####.##");
-                for (String s : Consumos) {
-                    Double total = (Double.parseDouble(Qtdes.get(i)) * Double.parseDouble(Precos.get(i)));
-                    out.println("<td>" + s + "</td>"
-                            + "<td>" + Qtdes.get(i) + "</td>"
-                            + "<td>" + Precos.get(i) + "</td>"
-                            + "<td>" + formato.format(total) + "</td>");
-            %>
-            <td><a href="altera.jsp?indice=<%=i%>"+">Alterar</a><br/></td>
-            <td><a href="excluir.jsp?indice=<%=i%>"+">Excluir</a><br/></td>
-        </tr>
-
-        <%
-                session.setAttribute("vConsumos", Consumos);
-                session.setAttribute("vQtdes", Qtdes);
-                session.setAttribute("Precos", Precos);
-                i++;
-                aux = aux + total;
-
-            }
-        %>
-    </table>   
-    <hr>
-    <table cellpadding="30" cellspacing="0" align=center>
-        <tr>
-        <script>
-            function fecharConta(){
-                confirm("Pode fechar a conta?");
-            }
-                </script>
-        <td><form action="page2.jsp">
-                <%
-                    session.setAttribute("vConsumos", Consumos);
-                    session.setAttribute("vQtdes", Qtdes);
-                    session.setAttribute("Precos", Precos);
-                    session.setAttribute("vTotal", aux);
-
-                %>
-
-            <input type="submit" name="fecharConta" value="Fechar Conta"/></td>
-
-    </form>
-    <td colspan=5 align=right>Total da Conta: R$ <%=formato.format(aux)%></td>
-
-</tr>
-</table>
+                <td>  
+                    <hr>
+                        <table cellpadding="30" cellspacing="0" align=center>
+                            <tr>
+                                <td>
+                                    <form action="page2.jsp" method="post">
+                                        <%
+                                            session.setAttribute("Total", aux);
+                                        %>
+                                        <input type="submit" name="fecharConta" value="fechar conta"/>
+                                    </form>
+                                </td>
+                                <td colspan=5 align=right>
+                                    Total da Conta: R$ <%=formato.format(aux)%>
+                                    <%}%>
+                                </td>
+                            </tr>
+                        </table>
+                </td>
+            </tr>
 </body>
 </html>

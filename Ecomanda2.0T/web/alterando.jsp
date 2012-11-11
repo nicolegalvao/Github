@@ -15,8 +15,8 @@
     </head>
     <body>
         <%
-            List<String> Qtdes = (ArrayList<String>) session.getAttribute("vQtdes");
-            List<String> Precos = (ArrayList<String>) session.getAttribute("vPrecos");
+            List<String> Qtdes = (ArrayList<String>) session.getAttribute("Qtdes");
+            List<String> Precos = (ArrayList<String>) session.getAttribute("Precos");
 
             String qtde = request.getParameter("qtde");
             String preco = request.getParameter("preco");
@@ -27,10 +27,10 @@
             Precos.set(Integer.parseInt(session.getAttribute("id").toString()), preco);
 
 
-            session.setAttribute("vQtdes", Qtdes);
-            session.setAttribute("vPrecos", Precos);
-        %>
+            session.setAttribute("Qtdes", Qtdes);
+            session.setAttribute("Precos", Precos);
+            response.sendRedirect("page1.jsp");
 
-        <jsp:forward page="page1.jsp"></jsp:forward>
+        %>
     </body>
 </html>

@@ -15,19 +15,20 @@
     </head>
     <body>
         <%
-            List<String> Consumos = (ArrayList<String>) session.getAttribute("vConsumos");
-            List<String> Qtdes = (ArrayList<String>) session.getAttribute("vQtdes");
-            List<String> Precos = (ArrayList<String>) session.getAttribute("vPrecos");
+            List<String> Consumos = (ArrayList<String>) session.getAttribute("Consumos");
+            List<String> Qtdes = (ArrayList<String>) session.getAttribute("Qtdes");
+            List<String> Precos = (ArrayList<String>) session.getAttribute("Precos");
 
             if (Consumos.size() > 0) {
                 Consumos.remove(Integer.parseInt((request.getParameter("indice").toString())));
                 Qtdes.remove(Integer.parseInt((request.getParameter("indice").toString())));
                 Precos.remove(Integer.parseInt((request.getParameter("indice").toString())));
             }
-            session.setAttribute("vConsumos", Consumos);
-            session.setAttribute("vQtdes", Qtdes);
-            session.setAttribute("vPrecos", Precos);
+            session.setAttribute("Consumos", Consumos);
+            session.setAttribute("Qtdes", Qtdes);
+            session.setAttribute("Precos", Precos);
+            response.sendRedirect("page1.jsp");
+
         %>
-        <jsp:forward page="page1.jsp"></jsp:forward>
     </body>
 </html>
